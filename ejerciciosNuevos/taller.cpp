@@ -87,13 +87,15 @@ bool primoGemelo(int n)
 void esCapicua(string s)
 {
 	int l = s.length();
-
+	int check;
+	
 	for (int i = 0; i < l; i++){
-		if (isdigit(s[i]) == true)
-			cout << "Numero: SI" << endl;
-		else 
-			cout << "Numero: NO" << endl; 
+		check = isdigit(s[i]);	
 	}
+	if (check)
+		cout << "Numero: SI";
+	else
+		cout << "Numero: NO";
 	
 	
 }
