@@ -42,4 +42,8 @@ int main()
 	esCapicua("ep2pe");
 	numerosHasta(5);
 	escaleraSimple(5);
+	if (esPerfecto(8))
+		cout << "Es perfecto" << endl;
+	else
+		cout << "No es perfecto" << endl;
 }

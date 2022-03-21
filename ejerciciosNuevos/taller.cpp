@@ -59,7 +59,7 @@ bool primoGemelo(int n){
 			return false;
 	}
 	bol = true;
-	if (bol = true)
+	if (bol == true)
 	{
 		n = n + 2;
 		for (int x = 2; x < n; x++)
@@ -120,7 +120,14 @@ void escaleraSimple(int n){
 }
 
 bool esPerfecto(int n){
-	// el pepe
+	int c = 0;	
+	
+	for(int i = 0; i < n; i++){
+		c = c + i;
+	}
+	if (c == n){
+		return true;  
+	}
+	return false;
 }
-
 
