@@ -97,11 +97,18 @@ void esCapicua(string s)
 void numerosHasta(int n){
 
 	for (int i = 0; i <= n; i++){
+		if (i == n){
+			cout << i << endl;
+			break; 
+		}
 		cout << i <<", ";
+		
 	}
+	
 }
 
 void escaleraSimple(int n){
+	cout << "Escalera de " << n << endl;
 	int i;
 	for (i = 1; i <= n; i++){
 		cout << 0;
