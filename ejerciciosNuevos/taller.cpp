@@ -9,7 +9,7 @@
 using namespace std;
 
 bool divide(int a, int b){
-	if (a % b == 0)
+	if (b % a == 0)
 		return true;
 	else
 		return false;
@@ -77,21 +77,28 @@ void esCapicua(string s)
 {
 	int l = s.length();
 	int check;
+	int pepe = 0;
 	
 	for (int i = 0; i < l; i++){
 		check = isdigit(s[i]);
+		if (s.at(i) != s.at(l - i - 1)){
+			pepe = 1;	
+		}
 		if (check){
-			cout << "Numero: SI, " ;
+			cout << "Numero: SI, ";
 			break;
 		}
 	}
- 	if (check == false) cout << "Numero: NO, ";
-
-	if (s == string(s.rbegin(), s.rend())) {
-        cout << "Palindromo: SI" << endl;
-    } else {
-        cout << "Palindromo: NO" << endl;
-    }		
+	if (check == false) cout << "Numero: NO ";
+	if (pepe == 0) 
+		cout << "Palindromo: SI " << endl;
+	else 
+		cout << "Palindromo: NO " << endl;
+	// if (s == string(s.rbegin(), s.rend())) {
+    //     cout << "Palindromo: SI" << endl;
+    // } else {
+    //     cout << "Palindromo: NO" << endl;
+    // }		
 }
 
 void numerosHasta(int n){
@@ -122,12 +129,24 @@ void escaleraSimple(int n){
 bool esPerfecto(int n){
 	int c = 0;	
 	
-	for(int i = 0; i < n; i++){
-		c = c + i;
+	// for(int i = 0; i < n; i++){
+	// 	c = c + i;
+	// 	if (c == n){
+	// 		return true;  
+	// 	}	
+	// }
+	for (int i=1; i<n; i++){
+		if (n % i==0)
+			c +=i;
+		}
+
+	if (n == c){
+		return true;
 	}
-	if (c == n){
-		return true;  
+	else{
+		
+		return false;
 	}
-	return false;
+
 }
 

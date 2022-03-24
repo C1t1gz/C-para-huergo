@@ -1,18 +1,18 @@
 #include <string>
 #include <stdio.h>
 #include <iostream>
-#include "taller.h"
+#include "taller.h"	
 
 
 using namespace std;
 
 int main()
 {
-	
-	if(divide(11, 2) == true)
-		cout << "El numero a es divisible por b" << endl;
-	else
-		cout << "El numero a no es divisble por b" << endl;
+	cout << divide(2, 4) << endl;
+	// if(divide(11, 2) == true)
+	// 	cout << "El numero a es divisible por b" << endl;
+	// else
+	// 	cout << "El numero a no es divisble por b" << endl;
 	
 	cout << "El mayor numero es "<< mayor(3,5) << endl;
 	
@@ -39,11 +39,12 @@ int main()
 		cout << "Tiene primo gemelo" << endl;
 	}
 
-	esCapicua("ep2pe");
+	esCapicua("e2p2e");
 	numerosHasta(5);
 	escaleraSimple(5);
-	if (esPerfecto(8))
-		cout << "Es perfecto" << endl;
-	else
-		cout << "No es perfecto" << endl;
+	cout << esPerfecto(6) << endl;
+	// if (esPerfecto(8))
+	// 	cout << "Es perfecto" << endl;
+	// else
+	// 	cout << "No es perfecto" << endl;
 }

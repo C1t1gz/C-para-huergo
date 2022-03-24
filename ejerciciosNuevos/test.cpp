@@ -123,25 +123,6 @@ TEST_CASE("Funcion esCapicua") {
 
 }
 
-TEST_CASE("Funcion Fibonacci") {
-    
-    SECTION("Casos base") {
-            REQUIRE(fibonacci(1) == 1);
-            REQUIRE(fibonacci(0) == 0);
-
-    }
-
-    SECTION("Caso general chico") {
-            REQUIRE(fibonacci(5) == 5);
-    }
-
-
-    SECTION("Caso general grande") {
-            REQUIRE(fibonacci(17) ==1597);
-    }
-
-}
-
 
 TEST_CASE("Funcion Escalera") {
     
