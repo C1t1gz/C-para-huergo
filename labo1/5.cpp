@@ -24,6 +24,10 @@ int main() {
     cout << "Ingrese la opcion a  ejecutar" << endl;
     cin >> opcion;
 
+    if (opcion == ""){
+	    cout << "Opcion vacia" << endl;
+    }
+
     char* cmd = strdup(comando.c_str());  
     
     
