@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -63,7 +64,7 @@ int main(int argc, char* argv[])
  	// ocurran escrituras concurrentes sobre el mismo espacio de memoria.
  	// Pueden asumir que funciona como cualquier otro float. 
 	
- 	int size = 3;
+ 	int size = max_days;
 	atomic<float> *evitas = (atomic<float> *) share_mem(size);
 	atomic<float> *angeles = (atomic<float> *) share_mem(size);
 
