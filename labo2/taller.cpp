@@ -71,12 +71,33 @@ vector<int> rotar(const vector<int>& v, int k)
 
 // COMPLETAR
 
+void sumar(vector<int>& v)
+{
+	for (int i = 0; i < v.size(); i++)
+	{
+		v[i] = v[i] + 1;
+	}
+}
+
 // Ejercicio 4
 // Dado un vector, dice si esta ordenado crecientemente o decrecientemente
 bool estaOrdenado(const vector<int>& v)
 {
-	// COMPLETAR
-	return true;
+	vector<int> pepe(v.size());
+
+	int contador = 0;
+	
+	for(int i = 0; i < v.size(); --i)
+	{
+		pepe[i] = v[i];
+
+	}
+	for(int i = 0; i < v.size(); --i)
+	{
+		if(pepe[i] = v[i]);
+
+	}
+		
 }
 
 // Ejercicio 5

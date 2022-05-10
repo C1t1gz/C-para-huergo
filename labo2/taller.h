@@ -26,6 +26,7 @@ vector<int> rotar(const vector<int>& v, int k);
 // Ejercicio 3 (*)
 // Dado un vector v, hacer una función que lo modifique sumandole uno a todos sus elementos
 // Determinar la cabecera de la funcion!!
+void sumar(vector<int>& v);
 
 // Ejercicio 4
 // Dado un vector v de int, dice si esta ordenado(ya sea creciente o decrecientemente)
