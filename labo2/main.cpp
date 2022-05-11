@@ -6,7 +6,6 @@ int main()
 {
     
     	vector<int> v{1, 2, 3, 4, 5, 6};
-    	/*
     	cout << "El vector principal es: " << endl;
     	for (int a = 0; a < v.size(); a++)
     	{
@@ -36,10 +35,6 @@ int main()
 	{
 		cout << v[i];
 	}
-     */	
-	estaOrdenado(v);
-	printf("\n");
-	/*
 	if (estaOrdenado(v) == true)
 	{
 		cout << "Esta ordenado" << endl;
@@ -48,6 +43,6 @@ int main()
 	{
 		cout << "No esta ordenado" << endl;
 	}
-	*/
+	
     return 0;
 }

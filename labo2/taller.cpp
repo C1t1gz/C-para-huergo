@@ -83,21 +83,28 @@ void sumar(vector<int>& v)
 // Dado un vector, dice si esta ordenado crecientemente o decrecientemente
 bool estaOrdenado(const vector<int>& v)
 {
-	vector<int> pepe(v.size());
+	int aux = 0;
+	bool pepe;
 
-	int contador = 0;
-	
-	for(int i = 0; i < v.size(); --i)
+	for(int i = 0; i < v.size(); i++)
 	{
-		pepe[i] = v[i];
-
-	}
-	for(int i = 0; i < v.size(); --i)
+		aux = v[i];
+		for (int j = i+1; j < v.size(); j++)
+		{
+			if (aux >= v[j])
+			{
+				return false;
+			}
+			else
+			{
+				pepe = true;
+			}	
+		}
+	}	
+	if (pepe == true)
 	{
-		if(pepe[i] = v[i]);
-
-	}
-		
+		return true;
+	}	
 }
 
 // Ejercicio 5
@@ -111,7 +118,6 @@ bool estaOrdenado(const vector<int>& v)
 
 void mostrarVector(const vector<int>& v, ostream& out)
 {
-	// COMPLETAR
 	return;
 }
 
