@@ -17,15 +17,15 @@
 int mayor(const vector<int>& v)
 {
 	int mayor = 0;
-	for (int i = 0; i < v.size(); i++)
+	for (int i : v)
 	{
 			if (v[i] > mayor)
 			{
-				mayor = v[i];
+				mayor = v[i];	
 			}
+		cout << mayor;
 	}
-
-		return mayor;
+	return mayor;
 }
 
 // Ejercicio 1 
@@ -51,7 +51,7 @@ vector<int> reverso(const vector<int>& v)
 vector<int> rotar(const vector<int>& v, int k)
 {
 	vector<int> rotado(v.size());
-	for (int i = 0; i < v.size(); i++)
+	for (int i : v)
 	{
 		rotado[i] = v[i];
 		
@@ -73,7 +73,7 @@ vector<int> rotar(const vector<int>& v, int k)
 
 void sumar(vector<int>& v)
 {
-	for (int i = 0; i < v.size(); i++)
+	for (int i : v)
 	{
 		v[i] = v[i] + 1;
 	}
@@ -105,6 +105,7 @@ bool estaOrdenado(const vector<int>& v)
 	{
 		return true;
 	}	
+	return false;
 }
 
 // Ejercicio 5
@@ -112,12 +113,26 @@ bool estaOrdenado(const vector<int>& v)
 // Ej: si el vector es <1, 2, 5, 65> se debe mostrar en pantalla [1, 2, 5, 65]
 
 // HINT: Esta función es general, out es del tipo de dato ostream. 
-// Eso significa que el parametro out puede ser cou o bien podrías ser un 
+// Eso significa que el parametro out puede ser cout o bien podrías ser un 
 // archivo de texto instancia de ofstream (que hereda de ostream).
 // En cualquier caso puedo usar el operador << para escribir.
 
 void mostrarVector(const vector<int>& v, ostream& out)
 {
+	string string_a_mostrar = "";
+	
+	for (int i : v)
+	{
+		string_a_mostrar.append(to_string(i));
+		string_a_mostrar.append(", ");
+		
+	
+	}
+	string_a_mostrar = string_a_mostrar.substr(0, string_a_mostrar.length() - 2);
+
+
+	out << string_a_mostrar << endl;
+
 	return;
 }
 
@@ -131,18 +146,24 @@ void mostrarVector(const vector<int>& v, ostream& out)
 
 void guardarVector(const vector<int>& v, string nombreArchivo)
 {
-	// Abro un archivo con el nombre dado por parámetros (c_str() convierte 
-	// string a un "string" de C)
-   ofstream file(nombreArchivo.c_str()); 
-   if(file.is_open())
-   {
-   		//Escribir en el archivo todo el vector (HINT: Ver función anterior)
-   		// COMPLETAR
+	string string_a_mostrar = "";
+	
+	for (int i : v)
+	{
+		string_a_mostrar.append(to_string(i));
+		string_a_mostrar.append(", ");
+	}
 
-   		// Cerar archivo	
-   		// COMPLETAR
-   }
-   return;
+	string_a_mostrar = string_a_mostrar.substr(0, string_a_mostrar.length() - 2);
+
+   	ofstream file(nombreArchivo.c_str()); 
+   	if(file.is_open())
+   	{
+		file << string_a_mostrar;   	
+		file.close();
+		
+   	}
+   	return;
 }
 
 
