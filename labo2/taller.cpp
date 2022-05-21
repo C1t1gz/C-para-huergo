@@ -17,13 +17,13 @@
 int mayor(const vector<int>& v)
 {
 	int mayor = 0;
-	for (int i : v)
+	for (int i = 0 ; i < v.size(); i++)
 	{
 			if (v[i] > mayor)
 			{
 				mayor = v[i];	
 			}
-		cout << mayor;
+		
 	}
 	return mayor;
 }
@@ -51,14 +51,14 @@ vector<int> reverso(const vector<int>& v)
 vector<int> rotar(const vector<int>& v, int k)
 {
 	vector<int> rotado(v.size());
-	for (int i : v)
+	for (int i = 0; i < v.size(); i++)
 	{
 		rotado[i] = v[i];
 		
 	}
 	for (int j = 0; j < k; j++)
 	{
-		rotado.push_back(j+1);
+		rotado.push_back(v[j]);
 		rotado.erase(rotado.begin());
 	}
 	return rotado;
@@ -177,12 +177,25 @@ void guardarVector(const vector<int>& v, string nombreArchivo)
 
 void cantidadApariciones(string nombreArchivo, string nombreArchivoOut,int max)
 {
+	string pepe = "pepe";	
+	
 	// Abro archivo para lectura
 	ifstream fileIn(nombreArchivo.c_str());
+	
+	getline(cin,nombreArchivo);
 
 	// Abro archivo para escriture
     ofstream fileOut(nombreArchivoOut.c_str());
-
+	ofstream file(nombreArchivoOut.c_str());
+	
+	if(file.is_open())
+   	{
+		getline(cin, nombreArchivo);   	
+		file << nombreArchivo; 
+		file.close();	
+   	}
+	
+	// file << pepe;
     // COMPLETAR
     
 	return;    

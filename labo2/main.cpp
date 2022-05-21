@@ -14,7 +14,7 @@ int main()
     	
 	// printf("\n");
     // printf("\n");
-	cout << "El numero mayor es "<< mayor(v) << endl;    	printf("\n");
+	// cout << "El mayor numero del vector es "<< mayor(v) << endl;    	printf("\n");
 	// cout << "El vector inverso es; "<< endl;
 	// for (int i = 0; i < v.size(); i++)
     // {
@@ -52,5 +52,8 @@ int main()
 	
 	// guardarVector(v, "epep");
     // cout << "El vector se guardo en el archivo de texto epep" << endl;
+	
+	cantidadApariciones("listas", "pep", 3);
+	
 	// return 0;
 }
