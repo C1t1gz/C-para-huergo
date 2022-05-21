@@ -36,8 +36,15 @@ int main(int argc , char* argv[]){
 	struct timespec start, stop;    	
 	clock_gettime(CLOCK_REALTIME, &start);
 
+	
 	if (filter == "plain")
 		plain(img, (unsigned char)p1);
+	else if (filter == "blackWhite")
+		blackWhite(img);
+	else if (filter == "brightness")
+		brightness(img, p1);
+	else 
+		cout << "haha filters go brrr" << endl;	
 	
    	clock_gettime(CLOCK_REALTIME, &stop);
 
