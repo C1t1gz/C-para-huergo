@@ -63,3 +63,26 @@ void brightness(ppm& img, float b)
 	}
 }
 
+
+void contrast(ppm& img, float contrast)
+{
+	for(int i = 0; i < img.height; i++)
+	{
+		for(int j = 0; j < img.width; j++)			
+		{
+			int r = img.getPixel(i, j).r;
+			int g = img.getPixel(i, j).g;
+			int bl = img.getPixel(i, j).b;
+			int f = (259*(contrast + 255))/(255*(259 - contrast));
+
+			int newr = (f*(r-128)) + 128;
+			int newg = (f*(g-128)) + 128;
+			int newbl = (f*(bl-128)) +128;
+			
+				
+			img.setPixel(i,j,pixel(newr,newg,newbl).truncate());
+		}
+	}
+
+}
+

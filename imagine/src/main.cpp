@@ -43,6 +43,8 @@ int main(int argc , char* argv[]){
 		blackWhite(img);
 	else if (filter == "brightness")
 		brightness(img, p1);
+	else if (filter == "contrast")
+		contrast(img, p1);
 	else 
 		cout << "haha filters go brrr" << endl;	
 	
