@@ -73,16 +73,16 @@ void contrast(ppm& img, float contrast)
 			int r = img.getPixel(i, j).r;
 			int g = img.getPixel(i, j).g;
 			int bl = img.getPixel(i, j).b;
-			int f = (259*(contrast + 255))/(255*(259 - contrast));
+			float f = (259*(contrast+255)) / (255*(259-contrast));
 
-			int newr = (f*(r-128)) + 128;
-			int newg = (f*(g-128)) + 128;
-			int newbl = (f*(bl-128)) +128;
-			
-				
+			float newr = (f*(r-128)) + 128;
+			float newg = (f*(g-128)) + 128;
+			float newbl = (f*(bl-128)) +128;
+		
 			img.setPixel(i,j,pixel(newr,newg,newbl).truncate());
+		    // img.getPixel(i,j).sub(128).mult(f).add(128).truncate();		
 		}
 	}
-
 }
+
 

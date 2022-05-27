@@ -13,7 +13,7 @@
 using namespace std;
 
 // El siguiente es un template basico que pueden usar como base
-
+		
 int main(int argc , char* argv[]){
 	
 	// Asumimos que los filtros sin p1 se escriben primero (por lo tanto, el primer p1 es no nulo)
@@ -60,3 +60,7 @@ int main(int argc , char* argv[]){
 	cout << "Listo" << endl;
 	return 0;
 }
+
+
+
+
