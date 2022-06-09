@@ -50,21 +50,16 @@ void brightness(ppm& img, float b)
 			int r = img.getPixel(i, j).r;
 			int g = img.getPixel(i, j).g;
 			int bl = img.getPixel(i, j).b;
-
 			r = r + 255 * b;
 			g = g + 255 * b;
-			bl = bl + 255 * b; 
-			
-		
-			
-			
+			bl = bl + 255 * b; 	
 			img.setPixel(i,j,pixel(r,g,bl).truncate());
 		}
 	}
 }
 
 
-void contrast(ppm& img, float contrast)
+void contraste(ppm& img, float contrast)
 {
 	for(int i = 0; i < img.height; i++)
 	{
@@ -84,21 +79,7 @@ void contrast(ppm& img, float contrast)
 	}
 }
 
-void convolutiongeneral(ppm& img, int kernel[3][3]) {
-	ppm imagenNueva (img.width-2, img.height-2);
-	for(int i = 1; i < img.height-1; i++) {
-		for(int j = 1; j < img.width-1; j++) {
-			pixel suma;
-			for(int a = -1; a <=1; a++) {
-				for(int b = -1; b <=1; b++) {
-					suma.addp(img.getPixel(i+i, j+a).mult(kernel[i+1][j+1])); 
-				}
-			}
-			imagenNueva.setPixel(i-1,j-1, suma.mult((float)1/9).truncate());
-		}
-	}
-	img = imagenNueva;
-}
+
 
 void zoom(ppm &img, int z) {
     ppm imagenNueva(img.width * z, img.height * z);
@@ -123,15 +104,45 @@ void zoom(ppm &img, int z) {
 };
 
 
+void convolutiongeneral(ppm& img, short int ker[]){
+
+    short int r;
+    short int g;
+    short int b;
+
+	ppm imagenNueva (img.width-2, img.height-2);
+
+    for(int h = 1; h < img.height - 1; h++){
+        for(int w = 1; w < img.width - 1; w++){
+            r = 0; 
+            g = 0;
+            b = 0;
+            for(int kh = 0; kh < 3; kh++){
+
+                for(int kw = 0; kw < 3; kw++){
+
+                    r = r + img.getPixel(h + kh - 1, w + kw - 1).r * ker[kh * 3 + kw];
+                    g = g + img.getPixel(h + kh - 1, w + kw - 1).g * ker[kh * 3 + kw];
+                    b = b + img.getPixel(h + kh - 1, w + kw - 1).b * ker[kh * 3 + kw];
+                }
+            }
+            imagenNueva.setPixel(h - 1,w - 1, pixel(r, g, b).truncate());
+        }
+    }
+	img = imagenNueva;
+	    
+	
+}
+
+
 void sharpen(ppm &img) {
 
-	int kernel[3][3] = {
-		{0,-1,0},
-		{-1,5,-1},
-		{0,-1,0}
+	short int kernel[9] = {
+		0,-1,0,
+		-1,5,-1,
+		0,-1,0
 	};
 	convolutiongeneral(img, kernel);
-
 }
 
 void crop(ppm &img, int k, int t){
@@ -144,4 +155,125 @@ void crop(ppm &img, int k, int t){
 		}
 	}
 	img = imagenNueva;
-};
+}
+
+
+// multithread
+
+
+void blackWhiteWithThreads(ppm& img, int i0, int i1)
+{
+	int g = 0;
+	for(i0; i0 < i1; i0++)
+	{
+		for(int j = 0; j < img.width; j++)
+		{
+			g = (int)((img.getPixel(i0, j).r + img.getPixel(i0, j).g + img.getPixel(i0, j).b)/3);
+			img.setPixel(i0,j,pixel(g,g,g).truncate());
+
+		}	
+	}	
+}
+
+void blackWhiteThreaded(ppm& img, int n){
+
+	if (n == 1)
+		blackWhite(img);
+	
+	int filas = int(img.height / n);
+	vector<thread> threads;
+	for (int i = 0; i < n; i++)
+	{
+		int inicio = i * filas;
+		int fin = (i + 1) * filas;
+		threads.push_back(thread(blackWhiteWithThreads, ref(img), inicio, fin));
+	}
+	for (int i = 0; i < n; i++){
+		threads[i].join();
+	}
+}
+
+void brightnessWithThreads(ppm& img, float b, int i0, int i1)
+{
+	for(i0; i0 < i1; i0++)
+	{
+		for(int j = 0; j < img.width; j++)			
+		{
+			int r = img.getPixel(i0, j).r;
+			int g = img.getPixel(i0, j).g;
+			int bl = img.getPixel(i0, j).b;
+			r = r + 255 * b;
+			g = g + 255 * b;
+			bl = bl + 255 * b; 	
+			img.setPixel(i0,j,pixel(r,g,bl).truncate());
+		}
+	}
+}
+
+void brightnessThreaded(ppm& img, float b, int n){
+	if (n==1)
+		brightness(img, b);
+
+	int filas = int(img.height / n);
+	vector<thread> threads;
+	for (int i = 0; i < n; i++)
+	{
+		int inicio = i * filas;
+		int fin = (i + 1) * filas;
+		threads.push_back(thread(brightnessWithThreads, ref(img), b, inicio, fin));
+	}
+	for (int i = 0; i < n; i++){
+		threads[i].join();
+	}
+}
+
+
+
+void contrastWithThreads(ppm& img, float contrast, int i0, int i1)
+{
+	int f = ((259*(contrast+255))/(255*(259-contrast)));
+
+	for(i0; i0 < i1; i0++)
+	{
+		for(int j = 0; j < img.width; j++)
+		{
+			int r = img.getPixel(i0, j).r;
+			int g = img.getPixel(i0, j).g;
+			int bl = img.getPixel(i0, j).b;
+			float f = (259*(contrast+255)) / (255*(259-contrast));
+
+			float newr = (f*(r-128)) + 128;
+			float newg = (f*(g-128)) + 128;
+			float newbl = (f*(bl-128)) +128;
+		
+			img.setPixel(i0,j,pixel(newr,newg,newbl).truncate());
+
+
+		}
+	}
+}
+
+
+
+
+
+void constrastThreaded(ppm& img, float contrast, int n){
+	if (n==1)
+		contraste(img, contrast);
+
+	int filas = int(img.height / n);
+	vector<thread> threads;
+	for (int i = 0; i < n; i++)
+	{
+		int inicio = i * filas;
+		int fin = (i + 1) * filas;
+		threads.push_back(thread(contrastWithThreads, ref(img), contrast, inicio, fin));
+	}
+	for (int i = 0; i < n; i++){
+		threads[i].join();
+	}
+}
+
+
+
+

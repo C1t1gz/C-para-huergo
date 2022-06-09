@@ -20,7 +20,8 @@ int main(int argc , char* argv[]){
 	// Asumimos que Zoom no se puede encadenar
 
 	if(string(argv[1]) == "-help"){
-		cout << "Uso: ./main <filtro> <nthreads> <[p1]> <img1> <custom_output> <[p2]> <img2>" << endl;
+		cout << "Uso: ./main <filtro> <nthreads> <[p1]> <img1> <custom_output> <[p2]>" << endl;
+		cout << "Los parametros, img2 lo omitimo debido a que no tenemos filtros que pidan este parametro" << endl;
 		return 0; 
 	}
 	
@@ -29,6 +30,7 @@ int main(int argc , char* argv[]){
 	float p1 = atof(argv[3]);
 	string img1(argv[4]);
 	string out = string(argv[5]);
+	float p2 = atof(argv[6]);
 	
 	ppm img(img1);
 	
@@ -36,15 +38,22 @@ int main(int argc , char* argv[]){
 	struct timespec start, stop;    	
 	clock_gettime(CLOCK_REALTIME, &start);
 
-	
+
 	if (filter == "plain")
-		plain(img, (unsigned char)p1);
+		plain(img, p1);
 	else if (filter == "blackWhite")
-		blackWhite(img);
+		blackWhiteThreaded(img, n);
 	else if (filter == "brightness")
-		brightness(img, p1);
+		brightnessThreaded(img,p1,n);
 	else if (filter == "contrast")
-		contrast(img, p1);
+		constrastThreaded(img,p1,n);
+	else if (filter == "zoom")
+		zoom(img, p1);	
+	else if (filter == "sharpen")
+		sharpen(img);
+	else if (filter == "crop")
+		crop(img, p1, p2);
+
 	else 
 		cout << "haha filters go brrr" << endl;	
 	
