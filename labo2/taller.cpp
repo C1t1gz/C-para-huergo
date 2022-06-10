@@ -175,30 +175,43 @@ void guardarVector(const vector<int>& v, string nombreArchivo)
 // Ejemplo: si el 1 aparece 44 veces y el 2 20 veces (y no hay otros numeros)
 // en la salida deberia haber dos lineas, "1 44" y la segunda "2 20"
 
+
 void cantidadApariciones(string nombreArchivo, string nombreArchivoOut,int max)
 {
-	string pepe = "pepe";	
-	
 	// Abro archivo para lectura
 	ifstream fileIn(nombreArchivo.c_str());
-	
-	getline(cin,nombreArchivo);
+	string line;
+	vector<int> numeros(10, 0);
+	while (getline(fileIn, line)) {
+        // Lo vamos imprimiendo}
 
+		for (int ch1 = 0; ch1 < max; ch1++){
+			size_t count = 0;
+
+			for (char i : line){
+				std::string tmp = std::to_string(ch1);
+    			char const *ch = tmp.c_str();
+				if (i == *ch){
+					count++;
+				}
+			}
+			numeros[ch1] = numeros[ch1] + count;
+			
+		}
+    }
 	// Abro archivo para escriture
     ofstream fileOut(nombreArchivoOut.c_str());
-	ofstream file(nombreArchivoOut.c_str());
-	
-	if(file.is_open())
-   	{
-		getline(cin, nombreArchivo);   	
-		file << nombreArchivo; 
-		file.close();	
-   	}
-	
-	// file << pepe;
+	for(int i = 0; i< numeros.size();i++){
+		if (numeros[i] != 0){
+			fileOut << i;
+			fileOut << " ";
+			fileOut << numeros[i];
+			fileOut<< "\n";
+		}
+	}
     // COMPLETAR
     
-	return;    
+	return;
 }
 
 

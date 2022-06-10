@@ -20,11 +20,15 @@ int main(int argc , char* argv[]){
 	// Asumimos que Zoom no se puede encadenar
 
 	if(string(argv[1]) == "-help"){
-		cout << "Uso: ./main <filtro> <nthreads> <[p1]> <img1> <custom_output> <[p2]>" << endl;
-		cout << "Los parametros, img2 lo omitimo debido a que no tenemos filtros que pidan este parametro" << endl;
+		cout << "Uso: ./main <filtro> <nthreads> <[p1]> <img1> <imagen Modificada> <[p2]>" << endl;
+		cout << "otros comandos -filters" << endl;
 		return 0; 
 	}
-	
+
+	if(string(argv[1]) == "-filters"){
+		cout << "blackWhite, brightness, contrast, zoom, sharpen, crop" << endl;
+		return 0;
+	}
 	string filter = string(argv[1]);
 	unsigned int n = atoi(argv[2]);
 	float p1 = atof(argv[3]);
@@ -50,7 +54,7 @@ int main(int argc , char* argv[]){
 	else if (filter == "zoom")
 		zoom(img, p1);	
 	else if (filter == "sharpen")
-		sharpen(img);
+		threadedsharpen(img,n);
 	else if (filter == "crop")
 		crop(img, p1, p2);
 

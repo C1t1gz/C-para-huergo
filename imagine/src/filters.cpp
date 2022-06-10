@@ -254,9 +254,6 @@ void contrastWithThreads(ppm& img, float contrast, int i0, int i1)
 }
 
 
-
-
-
 void constrastThreaded(ppm& img, float contrast, int n){
 	if (n==1)
 		contraste(img, contrast);
@@ -268,6 +265,55 @@ void constrastThreaded(ppm& img, float contrast, int n){
 		int inicio = i * filas;
 		int fin = (i + 1) * filas;
 		threads.push_back(thread(contrastWithThreads, ref(img), contrast, inicio, fin));
+	}
+	for (int i = 0; i < n; i++){
+		threads[i].join();
+	}
+}
+
+
+
+void threadedconvolution(ppm& img, short int ker[], int start, int end)
+{
+	
+	ppm imagenNueva;
+	int r,g,b;
+
+	for(int y = start; y < end; y++){
+		for(int x = 1; x < img.width - 1; x++){
+			r=g=b=0;
+			
+			for(int ky = 0; ky < 3; ky++){
+				for(int kx = 0; kx < 3; kx++){
+
+					r += img.getPixel(y+ky-1,x+kx-1).r * ker[ky*3+kx];
+					g += img.getPixel(y+ky-1,x+kx-1).g * ker[ky*3+kx];
+					b += img.getPixel(y+ky-1,x+kx-1).b * ker[ky*3+kx];
+				}
+			}
+			imagenNueva.setPixel(y-1,x-1,pixel(r,g,b).truncate());
+		}
+	}
+	return;
+}
+
+void threadedsharpen(ppm& img, int n){
+	if (n==1)
+		sharpen(img);
+
+	short int kernel[9] = {
+		0,-1,0,
+		-1,5,-1,
+		0,-1,0
+	};
+
+	int filas = int(img.height / n);
+	vector<thread> threads;
+	for (int i = 0; i < n; i++)
+	{
+		int inicio = i * filas;
+		int fin = (i - 1) * filas;
+		threads.push_back(thread(threadedconvolution, ref(img),kernel, inicio, fin));
 	}
 	for (int i = 0; i < n; i++){
 		threads[i].join();

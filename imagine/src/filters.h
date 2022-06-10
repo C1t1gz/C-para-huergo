@@ -27,7 +27,7 @@ void plain(ppm &img, unsigned char c);
 // MULTI-THREAD FILTERS
 
 void blackWhiteThreaded(ppm& img, int nthreads);
-void brightnessThreaded(ppm& img, int b, int n);
+void brightnessThreaded(ppm& img, float b, int n);
 void constrastThreaded(ppm& img, float contrast, int n);
 void threadedconvolution(ppm& img, short int ker[], int start, int end);
 void threadedsharpen(ppm& img,int nthreads);
