@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import imageio.v2 as imageio
@@ -13,14 +14,14 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
 def show_image():
-    img = imageio.imread('../out/brillo.ppm')
+    img = imageio.imread('../out/salida.ppm')
     plt.imshow(img)
     st.pyplot()
 
     if 'img' not in st.session_state:
         st.session_state['img'] = img
 
-def run_filters(c, b,bw, sh,s, cp, rows, columns, color, zoom, multi):
+def run_filters(c, b, bw, sh, cp, rows, columns,zoom, multi):
 
     ps = ""
     ps3 = ""
@@ -30,7 +31,6 @@ def run_filters(c, b,bw, sh,s, cp, rows, columns, color, zoom, multi):
         filters += 'crop '
         ps += str(rows) + ' '
         ps3 += str(columns) + ' '
-
 
     if sh:
         filters += 'sharpen '
@@ -42,6 +42,9 @@ def run_filters(c, b,bw, sh,s, cp, rows, columns, color, zoom, multi):
     filters += 'brightness '
     ps += str(b / 100) + ' '
 
+    if bw:
+        filters += 'blackWhite '
+        ps += '0 '
 
     if zoom:
         filters += 'zoom '
@@ -49,13 +52,10 @@ def run_filters(c, b,bw, sh,s, cp, rows, columns, color, zoom, multi):
 
     ps = ps[:-1]
     ps3 = ps3[:-1]
-
-    cmd = '.././main "' + filters + '" 1 "' + ps + '" ../imgs/ashitaka.ppm ../out/brillo.ppm '
-    if ps3 != "":
-        cmd += '"' + ps3 + '"'
+    
+    cmd = '../main "' + filters + '" 1 "' + ps + '" ../imgs/motor.ppm ../out/salida.ppm ' + '"' + ps3 + '"'
     os.system(cmd)
 
-   
    
 # Sidebar
 st.sidebar.header('Parámetros')
@@ -65,11 +65,9 @@ b = st.sidebar.slider('Brillo', -100, 100, 0, 1, '%d')
 sh = st.sidebar.checkbox('Sharpen',value = False, key='sh')
 bw = st.sidebar.checkbox('BlackWhite',value = False, key='bw')
 
-s = 0
+
 rows = 0
 columns = 0
-color = 0
-margin = 0
 multi = 0
 
 st.sidebar.header('Otros')
@@ -80,17 +78,16 @@ if cp:
     rows = st.sidebar.number_input("Filas", 1)
     columns = st.sidebar.number_input("Columnas", 1)
 
-
 zoom = st.sidebar.checkbox('Zoom',value = False, key='zoom')
 
 if zoom:
     multi = st.sidebar.number_input("Multiplicador", 2)
 
 if st.sidebar.button('Aplicar'):
-    run_filters(c, b,bw, sh,s, cp, rows, columns, color, zoom, multi)
+    run_filters(c, b, bw, sh, cp, rows, columns,zoom, multi)
 
 if st.sidebar.button('Reset'):
-    imageio.imwrite('../out/brillo.ppm', st.session_state['img'])
+    imageio.imwrite('../out/salida.ppm', st.session_state['img'])
 
 # Main layout
 st.title('Filtros de imagenes')

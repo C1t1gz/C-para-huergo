@@ -50,10 +50,7 @@ void filters(string filter, unsigned int n,float p1,ppm& img, float p2 )
 	else if (filter == "sharpen")
 		threadedsharpen(img,n);
 	else if (filter == "crop")
-		crop(img, p1, p2);
-
-	else 
-		cout << "haha filters go brrr" << endl;	
+		crop(img, p1, p2);	
 }
 
 // El siguiente es un template basico que pueden usar como base
