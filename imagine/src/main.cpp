@@ -7,42 +7,36 @@
 #include <thread>
 #include <unistd.h>
 #include <fstream>      // std::ofstream
+#include <sstream>
+#include <math.h>       /* sqrt */  
+#include <atomic>  
+
 #define ONE_OVER_BILLION 1E-9
 
 
 using namespace std;
 
-// El siguiente es un template basico que pueden usar como base
-		
-int main(int argc , char* argv[]){
-	
-	// Asumimos que los filtros sin p1 se escriben primero (por lo tanto, el primer p1 es no nulo)
-	// Asumimos que Zoom no se puede encadenar
-
-	if(string(argv[1]) == "-help"){
-		cout << "Uso: ./main <filtro> <nthreads> <[p1]> <img1> <imagen Modificada> <[p2]>" << endl;
-		cout << "otros comandos -filters" << endl;
-		return 0; 
-	}
-
-	if(string(argv[1]) == "-filters"){
-		cout << "blackWhite, brightness, contrast, zoom, sharpen, crop" << endl;
-		return 0;
-	}
-	string filter = string(argv[1]);
-	unsigned int n = atoi(argv[2]);
-	float p1 = atof(argv[3]);
-	string img1(argv[4]);
-	string out = string(argv[5]);
-	float p2 = atof(argv[6]);
-	
-	ppm img(img1);
-	
-	cout << "Aplicando filtros"<< endl;
-	struct timespec start, stop;    	
-	clock_gettime(CLOCK_REALTIME, &start);
+vector<string> separacion(string str, char separador) {
+    
+    int inicio = 0;
+    int final = 0;
+    string separado;
+    vector<string> resultado;
+    
+    while(final >= 0){
+        final = str.find(separador, inicio);
+        separado = str.substr(inicio, final - inicio);
+        inicio = final + 1;
+        resultado.push_back(separado);
+    }
+    
+    return resultado;
+}
 
 
+
+void filters(string filter, unsigned int n,float p1,ppm& img, float p2 )
+{
 	if (filter == "plain")
 		plain(img, p1);
 	else if (filter == "blackWhite")
@@ -60,17 +54,71 @@ int main(int argc , char* argv[]){
 
 	else 
 		cout << "haha filters go brrr" << endl;	
-	
-   	clock_gettime(CLOCK_REALTIME, &stop);
+}
 
-	double accum;
-	accum = ( stop.tv_sec - start.tv_sec ) + ( stop.tv_nsec - start.tv_nsec ) * ONE_OVER_BILLION;
-	printf("%lf s\n", accum);
+// El siguiente es un template basico que pueden usar como base
+		
+int main(int argc , char* argv[]){
+	
+	// Asumimos que los filtros sin p1 se escriben primero (por lo tanto, el primer p1 es no nulo)
+	// Asumimos que Zoom no se puede encadenar
+
+	if(string(argv[1]) == "-help"){
+		cout << "Uso: ./main <'filtro1 filtro2 filtro 3'> <nthreads> <'p1 p12 p13'> <img1> <imagen Modificada> <[p2]>" << endl;
+		cout << "otros comandos -filters" << endl;
+		return 0; 
+	}
+
+	if(string(argv[1]) == "-filters"){
+		cout << "blackWhite, brightness, contrast, zoom, sharpen, crop" << endl;
+		return 0;
+	}
+	string filter = string(argv[1]);
+	unsigned int n = atoi(argv[2]);
+	string p1 = string(argv[3]);
+	string img1(argv[4]);
+	string out = string(argv[5]);
+	float p2 = atof(argv[6]);
+	vector<string> filtros =separacion(filter, ' ');
+	vector<string> lP1 = separacion(p1,' ');
+	
+	vector<float> p1V;
+		for (int i = 0; i < lP1.size(); i++){
+			p1V.push_back(stof(lP1[i]));
+		}
+	
+	
+	ppm img(img1);
+	
+	cout << "Aplicando filtros"<< endl;    	
+	struct timespec start, stop;    	
+		clock_gettime(CLOCK_REALTIME, &start);
+
+	for(int i = 0; i < filtros.size(); i++){
+
+			filter = filtros[i];
+			float p1 = p1V[i];
+
+			filters(filter, n, p1, img, p2);
+		}
+
+		clock_gettime(CLOCK_REALTIME, &stop);
+
+		double accum;
+		accum = ( stop.tv_sec - start.tv_sec ) + ( stop.tv_nsec - start.tv_nsec ) * ONE_OVER_BILLION;
+		printf("%lf s\n", accum);
 
 	cout << "Escribiendo imagen" << endl;
 	img.write(out);	
 	    
 	cout << "Listo" << endl;
+
+	ofstream file;
+	file.open("../pruebas/resultados.csv", ios::app);
+	string outPrueba = to_string(img.width) + "," + to_string(accum) + "," + to_string(n) + "\n";
+	cout << "Printeando esto: " << outPrueba;
+	file << outPrueba;
+	file.close();
 	return 0;
 }
 

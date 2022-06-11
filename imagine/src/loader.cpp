@@ -15,13 +15,50 @@ namespace fs = std::filesystem;
 
 using namespace std;
 
+vector<string> separacion(string str, char separador) {
+    
+    int inicio = 0;
+    int final = 0;
+    string separado;
+    vector<string> resultado;
+    
+    while(final >= 0){
+        final = str.find(separador, inicio);
+        separado = str.substr(inicio, final - inicio);
+        inicio = final + 1;
+        resultado.push_back(separado);
+    }
+    
+    return resultado;
+}
+
+void filters(string filter, unsigned int n,float p1,ppm& img, float p2 )
+{
+	if (filter == "plain")
+		plain(img, p1);
+	else if (filter == "blackWhite")
+		blackWhiteThreaded(img, n);
+	else if (filter == "brightness")
+		brightnessThreaded(img,p1,n);
+	else if (filter == "contrast")
+		constrastThreaded(img,p1,n);
+	else if (filter == "zoom")
+		zoom(img, p1);	
+	else if (filter == "sharpen")
+		threadedsharpen(img,n);
+	else if (filter == "crop")
+		crop(img, p1, p2);
+
+	else 
+		cout << "haha filters go brrr" << endl;	
+}
 
 
 int main(int argc , char* argv[]){
 	
 
 	if(string(argv[1]) == "-help"){
-		cout << "Uso: ./loader <filtro> <nthreads> <[p1]> <carpeta de origen> <carpeta de destino> <[p2]>" << endl;
+		cout << "Uso: ./loader <'filtro1 filtro2 filtro3'> <nthreads> <'p1 p12 p13'> <carpeta de origen> <carpeta de destino> <[p2]>" << endl;
 		cout << "otros comandos -filters" << endl;
         return 0; 
 	}
@@ -32,10 +69,17 @@ int main(int argc , char* argv[]){
 	
 	string filter = string(argv[1]);
 	unsigned int n = atoi(argv[2]);
-	float p1 = atof(argv[3]);
+	string p1 = string(argv[3]);
 	string root = string(argv[4]);
 	string out = string(argv[5]);
-    float p2 = atof(argv[6]);
+	float p2 = atof(argv[6]);
+	vector<string> filtros =separacion(filter, ' ');
+	vector<string> lP1 = separacion(p1,' ');
+	
+	vector<float> p1V;
+	for (int i = 0; i < lP1.size(); i++){
+		p1V.push_back(stof(lP1[i]));	
+    }
     
 	cout << "Aplicando filtros"<< endl;
 	struct timespec start, stop;    	
@@ -57,33 +101,14 @@ int main(int argc , char* argv[]){
         } 
         if (tipo == ".ppm"){   
             ppm img(root + archivo);
-            
-            if (filter == "plain")
-                plain(img, (unsigned char)p1);
-            else if (filter == "blackWhite")
-            {
-                blackWhiteThreaded(img, n);
-            }
-            else if (filter == "contrast")
-            {
-                constrastThreaded(img,p1,n);
-            }
-            else if (filter == "brightness")
-            {
-                brightnessThreaded(img,p1,n);
-            }
-            else if (filter == "zoom")
-            {
-                zoom(img, p1);
-            }
-            else if (filter == "sharpen")
-            {
-                threadedsharpen(img,n);
-            }
-            else if (filter == "crop")
-            {
-                crop(img, p1, p2);
-            }
+            for(int i = 0; i < filtros.size(); i++){
+
+			filter = filtros[i];
+			float p1 = p1V[i];
+
+			filters(filter, n, p1, img, p2);
+		}
+
             string outFinal = out + archivo;
             cout << "Escribiendo imagen: " << archivo << endl;
             img.write(outFinal);	    
