@@ -22,7 +22,12 @@ int main(int argc , char* argv[]){
 
 	if(string(argv[1]) == "-help"){
 		cout << "Uso: ./loader <filtro> <nthreads> <[p1]> <carpeta de origen> <carpeta de destino> <[p2]>" << endl;
-		return 0; 
+		cout << "otros comandos -filters" << endl;
+        return 0; 
+	}
+    if(string(argv[1]) == "-filters"){
+		cout << "blackWhite, brightness, contrast, zoom, sharpen, crop" << endl;
+		return 0;
 	}
 	
 	string filter = string(argv[1]);
@@ -73,7 +78,7 @@ int main(int argc , char* argv[]){
             }
             else if (filter == "sharpen")
             {
-                sharpen(img);
+                threadedsharpen(img,n);
             }
             else if (filter == "crop")
             {

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-// COMPLETAR :)
+// COMPLETAr:)
 unsigned char truncate_pixel(float color)
 { 
     return (color > 255) ? 255 : ((color < 0) ? 0: (unsigned char)color); 
@@ -83,17 +83,17 @@ void contraste(ppm& img, float contrast)
 
 void zoom(ppm &img, int z) {
     ppm imagenNueva(img.width * z, img.height * z);
-	for (size_t i = 0; i < img.height; i++)
+	for (int i = 0; i < img.height; i++)
 	{
-		for (size_t j = 0; j < img.width; j++)
+		for (int j = 0; j < img.width; j++)
 		{
 			pixel p = img.getPixel(i, j);
 
 			unsigned int resultadoj = (j + (j * (z - 1)));
 			unsigned int resultadoi = (i + (i * (z - 1)));
-			for (size_t offset_i = 0; offset_i < z; offset_i++)
+			for (int offset_i = 0; offset_i < z; offset_i++)
 			{
-				for (size_t offset_j = 0; offset_j < z; offset_j++)
+				for (int offset_j = 0; offset_j < z; offset_j++)
 				{
 					imagenNueva.setPixel(resultadoi + offset_i, resultadoj + offset_j, p);
 				}
@@ -147,9 +147,9 @@ void sharpen(ppm &img) {
 
 void crop(ppm &img, int k, int t){
 	ppm imagenNueva = ppm(img.width - t, img.height - k);
-	for (size_t i = k; i < img.height; i++)
+	for (int i = k; i < img.height; i++)
 	{
-		for (size_t j = t; j < img.width; j++)
+		for (int j = t; j < img.width; j++)
 		{
 			imagenNueva.setPixel(i - k, j - t, img.getPixel(i, j));
 		}
@@ -178,14 +178,16 @@ void blackWhiteWithThreads(ppm& img, int i0, int i1)
 void blackWhiteThreaded(ppm& img, int n){
 
 	if (n == 1)
+	{
 		blackWhite(img);
-	
-	int filas = int(img.height / n);
+		return;	
+	}
+	int limites = int(img.height / n);
 	vector<thread> threads;
 	for (int i = 0; i < n; i++)
 	{
-		int inicio = i * filas;
-		int fin = (i + 1) * filas;
+		int inicio = i * limites;
+		int fin = (i + 1) * limites;
 		threads.push_back(thread(blackWhiteWithThreads, ref(img), inicio, fin));
 	}
 	for (int i = 0; i < n; i++){
@@ -212,14 +214,16 @@ void brightnessWithThreads(ppm& img, float b, int i0, int i1)
 
 void brightnessThreaded(ppm& img, float b, int n){
 	if (n==1)
+	{
 		brightness(img, b);
-
-	int filas = int(img.height / n);
+		return;
+	}
+	int limites = int(img.height / n);
 	vector<thread> threads;
 	for (int i = 0; i < n; i++)
 	{
-		int inicio = i * filas;
-		int fin = (i + 1) * filas;
+		int inicio = i * limites;
+		int fin = (i + 1) * limites;
 		threads.push_back(thread(brightnessWithThreads, ref(img), b, inicio, fin));
 	}
 	for (int i = 0; i < n; i++){
@@ -258,12 +262,12 @@ void constrastThreaded(ppm& img, float contrast, int n){
 	if (n==1)
 		contraste(img, contrast);
 
-	int filas = int(img.height / n);
+	int limites = int(img.height / n);
 	vector<thread> threads;
 	for (int i = 0; i < n; i++)
 	{
-		int inicio = i * filas;
-		int fin = (i + 1) * filas;
+		int inicio = i * limites;
+		int fin = (i + 1) * limites;
 		threads.push_back(thread(contrastWithThreads, ref(img), contrast, inicio, fin));
 	}
 	for (int i = 0; i < n; i++){
@@ -273,53 +277,75 @@ void constrastThreaded(ppm& img, float contrast, int n){
 
 
 
-void threadedconvolution(ppm& img, short int ker[], int start, int end)
-{
-	
-	ppm imagenNueva;
-	int r,g,b;
+void sharpenwithThreads(ppm& img, ppm img2, int start, int end){
 
-	for(int y = start; y < end; y++){
-		for(int x = 1; x < img.width - 1; x++){
-			r=g=b=0;
-			
-			for(int ky = 0; ky < 3; ky++){
-				for(int kx = 0; kx < 3; kx++){
+	vector<int> c1 = {0, -1, 0};
+	vector<int> c2 = {-1, 5, -1};
+	vector<int> c3 = {0, -1, 0};
+	vector<vector<int>> matriz = {c1, c2, c3};	
 
-					r += img.getPixel(y+ky-1,x+kx-1).r * ker[ky*3+kx];
-					g += img.getPixel(y+ky-1,x+kx-1).g * ker[ky*3+kx];
-					b += img.getPixel(y+ky-1,x+kx-1).b * ker[ky*3+kx];
+	for(int i = 0; i < img.height; i++){
+
+		if (i == 0 || i == img.height - 1)
+			continue;
+
+		for(int j = 0; j < img.width; j++){
+
+			if(j == 0 || j == img.width - 1)
+				continue;
+
+			int red = 0;
+			int green = 0;
+			int blue = 0;
+
+			int r = 0;
+			int g = 0;
+			int b = 0;
+
+			int x = 0;
+			int y = 0;
+
+			for (int height = -1; height <= 1; height++){
+
+				for (int width = -1; width <= 1; width++){
+					r = img2.getPixel(i + height, j + width).r;
+					g =	img2.getPixel(i + height, j + width).g;
+					b = img2.getPixel(i + height, j + width).b;
+
+					red += r * matriz[x][y];
+					green += g * matriz[x][y];
+					blue += b * matriz[x][y];
+
+					x++;
 				}
+				x = 0;
+				y++;
 			}
-			imagenNueva.setPixel(y-1,x-1,pixel(r,g,b).truncate());
+			img.setPixel(i, j, pixel(red, green, blue).truncate());
 		}
 	}
-	return;
 }
 
 void threadedsharpen(ppm& img, int n){
+	
 	if (n==1)
+	{
 		sharpen(img);
+		return;
+	}
+	ppm imagenNueva = img;
 
-	short int kernel[9] = {
-		0,-1,0,
-		-1,5,-1,
-		0,-1,0
-	};
-
-	int filas = int(img.height / n);
+	int limites = int(img.height / n);
 	vector<thread> threads;
 	for (int i = 0; i < n; i++)
 	{
-		int inicio = i * filas;
-		int fin = (i - 1) * filas;
-		threads.push_back(thread(threadedconvolution, ref(img),kernel, inicio, fin));
+		int inicio = i * limites;
+		int fin = (i + 1) * limites;
+		threads.push_back(thread(sharpenwithThreads, ref(img), imagenNueva, inicio, fin));
 	}
 	for (int i = 0; i < n; i++){
 		threads[i].join();
 	}
 }
-
-
 
 
