@@ -112,8 +112,7 @@ int main(int argc , char* argv[]){
 
 	ofstream file;
 	file.open("../pruebas/resultados.csv", ios::app);
-	string outPrueba = to_string(img.width) + "," + to_string(accum) + "," + to_string(n) + "\n";
-	cout << "Printeando esto: " << outPrueba;
+	string outPrueba = "Ancho: " + to_string(img.width)+ " Alto: " +to_string(img.height) + " Tiempo Tardado: " + to_string(accum) + " Numero de hilos: " + to_string(n) + "\n";
 	file << outPrueba;
 	file.close();
 	return 0;
