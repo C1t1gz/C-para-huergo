@@ -9,10 +9,10 @@
 #include <filesystem>
 #include <dirent.h>
 #include "filters.h"
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
 #define ONE_OVER_BILLION 1E-9
 // Liberia de filesystem para la lectura de carpetas
-namespace fs = std::filesystem;
-
 using namespace std;
 
 vector<string> separacion(string str, char separador) {
